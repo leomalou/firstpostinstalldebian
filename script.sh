@@ -1,7 +1,5 @@
 #!/bin/bash
 
-echo "=== Baseline CLI Debian - Post Install ==="
-
 # Vérification root
 if [ "$EUID" -ne 0 ]; then
   echo "Lance ce script en root."
