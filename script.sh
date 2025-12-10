@@ -32,15 +32,15 @@ dnsutils \
 net-tools \
 sudo \
 lynx \
-wget
+wget \
+winbind \ 
+samba
 
 updatedb
 
 # =========================
 # NETBIOS
 # =========================
-echo ">>> Installation NetBIOS"
-apt install -y winbind samba
 
 echo ">>> Configuration nsswitch (écriture directe)"
 
