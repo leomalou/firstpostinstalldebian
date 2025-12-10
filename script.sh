@@ -105,9 +105,9 @@ echo ">>> Installation de Webmin"
 apt install -y wget apt-transport-https software-properties-common gnupg
 
 # Télécharger et exécuter le script officiel
-wget -O /tmp/webmin-setup-repo.sh \
+wget -O webmin-setup-repo.sh \
 https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
-sh /tmp/webmin-setup-repo.sh
+sh webmin-setup-repo.sh
 
 # Mettre à jour les dépôts pour prendre en compte Webmin
 apt update
