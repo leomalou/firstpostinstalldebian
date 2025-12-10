@@ -11,23 +11,6 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 # =========================
-# VARIABLES CONFIG RESEAU
-# =========================
-IP_ADDR="192.168.1.50"
-NETMASK="255.255.255.0"
-GATEWAY="192.168.1.254"
-DNS1="192.168.1.254"
-DNS2="1.1.1.1"
-DNS3="8.8.8.8"
-DOMAIN="tssr.lan"
-
-# =========================
-# DETECTION INTERFACE
-# =========================
-IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -n 1)
-echo "Interface détectée : $IFACE"
-
-# =========================
 # MISE A JOUR
 # =========================
 echo ">>> Mise à jour du système"
@@ -88,35 +71,6 @@ echo "alias ls='ls \$LS_OPTIONS'" >> /root/.bashrc
 echo "alias ll='ls \$LS_OPTIONS -l'" >> /root/.bashrc
 echo "alias l='ls \$LS_OPTIONS -A'" >> /root/.bashrc
 
-# =========================
-# CONFIG RESEAU STATIQUE
-# =========================
-echo ">>> Configuration IP statique"
-
-echo "auto lo" > /etc/network/interfaces
-echo "iface lo inet loopback" >> /etc/network/interfaces
-echo "" >> /etc/network/interfaces
-echo "auto $IFACE" >> /etc/network/interfaces
-echo "iface $IFACE inet static" >> /etc/network/interfaces
-echo "    address $IP_ADDR" >> /etc/network/interfaces
-echo "    netmask $NETMASK" >> /etc/network/interfaces
-echo "    gateway $GATEWAY" >> /etc/network/interfaces
-echo "    dns-nameservers $DNS1 $DNS2 $DNS3" >> /etc/network/interfaces
-echo "    dns-search $DOMAIN" >> /etc/network/interfaces
-
-systemctl restart networking
-
-# =========================
-# DNS (verrouillé)
-# =========================
-echo ">>> Configuration DNS"
-
-echo "search $DOMAIN" > /etc/resolv.conf
-echo "nameserver $DNS1" >> /etc/resolv.conf
-echo "nameserver $DNS2" >> /etc/resolv.conf
-echo "nameserver $DNS3" >> /etc/resolv.conf
-
-chattr +i /etc/resolv.conf
 
 # =========================
 # INSTALLATION WEBMIN
