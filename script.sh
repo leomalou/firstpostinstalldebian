@@ -6,7 +6,7 @@ echo "=== Baseline CLI Debian - Post Install ==="
 # VERIFICATION ROOT
 # =========================
 if [ "$EUID" -ne 0 ]; then
-  echo "Lance ce script en root."
+  echo "Ce script ne peut être lancer qu'en root."
   exit 1
 fi
 
@@ -19,7 +19,7 @@ GATEWAY="192.168.1.254"
 DNS1="192.168.1.254"
 DNS2="1.1.1.1"
 DNS3="8.8.8.8"
-DOMAIN="."
+DOMAIN="tssr.lan"
 
 # =========================
 # DETECTION INTERFACE
@@ -138,4 +138,5 @@ echo ">>> Webmin : https://$IP_ADDR:10000"
 # =========================
 echo ">>> Baseline terminée."
 echo ">>> Redémarrage recommandé."
+reboot
 
