@@ -30,9 +30,9 @@ echo ">>> Mise à jour du système"
 apt update && apt upgrade -y
 
 # =========================
-# INSTALLATION OUTILS
+# INSTALLATION OUTILS DE BASE
 # =========================
-echo ">>> Installation des outils de base"
+echo ">>> Installation des BinUtils et outils CLI"
 apt install -y \
 ssh \
 zip unzip \
@@ -47,9 +47,12 @@ net-tools \
 sudo \
 lynx
 
-echo ">>> Mise à jour de la base locate"
+# Mise à jour de la base locate
 updatedb
 
+# =========================
+# INSTALLATION NETBIOS
+# =========================
 echo ">>> Installation couche NetBIOS"
 apt install -y winbind samba
 
@@ -61,15 +64,18 @@ else
   echo "wins ajouté"
 fi
 
+# =========================
+# PERSONNALISATION BASH ROOT
+# =========================
 echo ">>> Personnalisation du bash root"
-sed -i '10,14 s/^#//' /root/.bashrc
+sed -i '9,13 s/^#//' /root/.bashrc
 
 # =========================
-# CONFIG RESEAU STATIQUE
+# CONFIGURATION RESEAU STATIQUE
 # =========================
 echo ">>> Configuration IP statique pour $IFACE"
 
-# Sauvegarde
+# Sauvegarde du fichier interfaces
 cp /etc/network/interfaces /etc/network/interfaces.bak
 
 cat > /etc/network/interfaces <<EOF
@@ -89,33 +95,39 @@ EOF
 systemctl restart networking
 
 # =========================
-# CONFIG RESOLV (systemd-resolved)
+# CONFIGURATION /etc/resolv.conf
 # =========================
 echo ">>> Configuration DNS sans search LAN"
-if systemctl is-active --quiet systemd-resolved; then
-    systemctl restart systemd-resolved
-fi
+cat > /etc/resolv.conf <<EOF
+search $DOMAIN
+nameserver $DNS1
+nameserver $DNS2
+nameserver $DNS3
+EOF
 
 # =========================
 # INSTALLATION WEBMIN
 # =========================
 echo ">>> Installation de Webmin"
 
-# Installer les dépendances pour Webmin
+# Installer dépendances
 apt install -y wget apt-transport-https software-properties-common gnupg
 
 # Télécharger et exécuter le script officiel
-wget -O webmin-setup-repo.sh \
+wget -O /tmp/webmin-setup-repo.sh \
 https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
-sh webmin-setup-repo.sh
+sh /tmp/webmin-setup-repo.sh
 
 # Mettre à jour les dépôts pour prendre en compte Webmin
 apt update
 
 # Installer Webmin
-apt install -y webmin
+apt install -y webmin --install-recommends
 
 echo ">>> Webmin installé : https://$IP_ADDR:10000"
 
+# =========================
+# FIN DU SCRIPT
+# =========================
 echo ">>> Baseline terminée avec succès."
 echo "Redémarrage conseillé pour appliquer toutes les modifications."
