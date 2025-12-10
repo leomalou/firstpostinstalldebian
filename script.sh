@@ -1,6 +1,5 @@
 #!/bin/bash
 
-echo "=== Baseline CLI Debian - Post Install ==="
 
 # =========================
 # VERIFICATION ROOT
