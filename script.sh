@@ -110,19 +110,16 @@ EOF
 # =========================
 echo ">>> Installation de Webmin"
 
-# Installer dépendances
-apt install -y wget apt-transport-https software-properties-common gnupg
-
 # Télécharger et exécuter le script officiel
 wget -O /tmp/webmin-setup-repo.sh \
 https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
-sh /tmp/webmin-setup-repo.sh
+yes | sh /tmp/webmin-setup-repo.sh 
 
 # Mettre à jour les dépôts pour prendre en compte Webmin
 apt update
 
 # Installer Webmin
-apt install -y webmin --install-recommends
+apt install -y webmin --install-recommends 
 
 echo ">>> Webmin installé : https://$IP_ADDR:10000"
 
