@@ -5,7 +5,7 @@ Pour être sûr d'installer au bon endroit le script il faut utiliser **cd** san
 
 *Pour installer le script voici la commande:*
 
-wget https://raw.githubusercontent/leomalou/firstpostinstalldebian/main/script.sh
+wget https://raw.githubusercontent.com/leomalou/firstpostinstalldebian/main/script.sh
 
 *Pour executer le script il ne reste qu'à faire cette commande*
 sh script.sh
