@@ -1,5 +1,5 @@
-# firstpostinstalldebian
-script de post installation debian
+# premier script de post-installation
+## script de post installation debian 
 
 Pour être sûr d'installer au bon endroit le script il faut utiliser **cd** sans argument en utilisateur **root**
 
