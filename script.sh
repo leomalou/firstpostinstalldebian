@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # =========================
-# MISE A JOUR
+# Mise à jour
 # =========================
 
 apt update && apt upgrade -y
 
 # =========================
-# OUTILS DE BASE
+# Outils à installer
 # =========================
 
 apt install  ssh zip unzip nmap locate ncdu curl git screen dnsutils net-tools sudo lynx wget winbind samba -y
