@@ -8,9 +8,30 @@ if [ "$EUID" -ne 0 ]; then
   exit 1
 fi
 
+# =========================
+# VARIABLES CONFIG RESEAU
+# =========================
+IP_ADDR="192.168.1.50"
+NETMASK="255.255.255.0"
+GATEWAY="192.168.1.254"
+DNS1="192.168.1.254"
+DNS2="1.1.1.1"
+DNS3="8.8.8.8"
+DOMAIN="."
+
+# Détection interface principale (non loopback)
+IFACE=$(ip -o link show | awk -F': ' '{print $2}' | grep -v lo | head -n 1)
+echo "Interface principale détectée : $IFACE"
+
+# =========================
+# MISE À JOUR
+# =========================
 echo ">>> Mise à jour du système"
 apt update && apt upgrade -y
 
+# =========================
+# INSTALLATION OUTILS
+# =========================
 echo ">>> Installation des outils de base"
 apt install -y \
 ssh \
@@ -44,25 +65,48 @@ echo ">>> Personnalisation du bash root"
 sed -i '10,14 s/^#//' /root/.bashrc
 
 # =========================
-# INSTALLATION DE WEBMIN
+# CONFIG RESEAU STATIQUE
 # =========================
+echo ">>> Configuration IP statique pour $IFACE"
 
-echo ">>> Installation de Webmin"
+# Sauvegarde
+cp /etc/network/interfaces /etc/network/interfaces.bak
 
-# Sécurité : curl
-if ! command -v curl &>/dev/null; then
-  echo "curl absent, installation..."
-  apt install -y curl
+cat > /etc/network/interfaces <<EOF
+auto lo
+iface lo inet loopback
+
+auto $IFACE
+iface $IFACE inet static
+    address $IP_ADDR
+    netmask $NETMASK
+    gateway $GATEWAY
+    dns-nameservers $DNS1 $DNS2 $DNS3
+    dns-search $DOMAIN
+EOF
+
+# Redémarrage du réseau
+systemctl restart networking
+
+# =========================
+# CONFIG RESOLV (systemd-resolved)
+# =========================
+echo ">>> Configuration DNS sans search LAN"
+if systemctl is-active --quiet systemd-resolved; then
+    systemctl restart systemd-resolved
 fi
 
-curl -o webmin-setup-repo.sh \
+# =========================
+# INSTALLATION WEBMIN
+# =========================
+echo ">>> Installation de Webmin"
+
+curl -o /tmp/webmin-setup-repo.sh \
 https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
+sh /tmp/webmin-setup-repo.sh
+apt install -y webmin --install-recommends
 
-sh webmin-setup-repo.sh
-apt install -y webmin --install-recommends -y
-
-echo ">>> Webmin installé (https://IP:10000)"
+echo ">>> Webmin installé : https://$IP_ADDR:10000"
 
 echo ">>> Baseline terminée avec succès."
-echo "Un redémarrage est conseillé."
-
+echo "Redémarrage conseillé pour appliquer toutes les modifications."
