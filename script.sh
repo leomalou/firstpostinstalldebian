@@ -44,7 +44,7 @@ echo ">>> Personnalisation du bash root"
 BASHRC="/root/.bashrc"
 
 # Décommenter les lignes 9 à 13
-sed -i '9,13 s/^#//' "$BASHRC"
+sed -i '10,14 s/^#//' "$BASHRC"
 
 echo ">>> Baseline terminée avec succès."
 echo "Redémarre la machine pour appliquer proprement les changements."
