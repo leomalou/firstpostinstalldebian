@@ -33,8 +33,8 @@ net-tools \
 sudo \
 lynx \
 wget \
-winbind \ 
-samba
+winbind samba 
+
 
 updatedb
 
