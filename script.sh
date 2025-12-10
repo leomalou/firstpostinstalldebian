@@ -59,7 +59,7 @@ curl -o webmin-setup-repo.sh \
 https://raw.githubusercontent.com/webmin/webmin/master/webmin-setup-repo.sh
 
 sh webmin-setup-repo.sh
-apt install -y webmin --install-recommends
+apt install -y webmin --install-recommends -y
 
 echo ">>> Webmin installé (https://IP:10000)"
 
